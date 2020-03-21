@@ -1,0 +1,48 @@
+pre {
+  background: #ccc;
+  max-width: fit-content;
+  min-width: 300px;
+  padding: 1em;
+}
+
+/deep/ sf-widget-chooser {
+  display: inline-block;
+  margin: 0.2em;
+}
+
+/deep/ .control-label {
+  cursor: pointer;
+}
+
+/deep/ .control-label:hover ~ .formHelp {
+  display: inline-block;
+}
+
+/deep/ .formHelp {
+  margin-right: .2em;
+  position: absolute;
+  display: none;
+  background: cornflowerblue;
+  color: white;
+  font-weight: 700;
+  padding: 2em;
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  border-radius: 1em;
+}
+
+/deep/ sf-form-object fieldset {
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  border-radius: 1em;
+  border-color: cornflowerblue;
+  padding: 3em;
+}
+
+/deep/ .widget input, /deep/ sf-button-widget button {
+  -webkit-border-radius: 0.2em;
+  -moz-border-radius: 0.2em;
+  border-radius: 0.2em;
+  border: solid 1px #cccccc;
+}
+

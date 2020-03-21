@@ -1,0 +1,15 @@
+<div *ngIf="uiInitialFormViewModel;else no_input" class="ui-g-12" [ngClass]="noCard?'':'card card-w-title'">
+  <sf-form
+    [schema]="finalSchemaObject"
+    [model]="modelObject"
+    (onChange)="modelChanged($event)"
+    [actions]="formActions"
+    [validators]="formValidators"
+    [bindings]="formBindings"
+  ></sf-form>
+</div>
+<ng-template #no_input>
+  <div class="ui-g-12" [ngClass]="noCard?'':'card card-w-title'" i18n>
+    {{noInputMessage}}
+  </div>
+</ng-template>

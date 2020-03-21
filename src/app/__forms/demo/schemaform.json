@@ -1,0 +1,144 @@
+{
+  "widget": {
+    "id": "object",
+    "buttons": [
+      {
+        "id": "___action___schema_form_final",
+        "label": "Submit form"
+      }
+    ]
+  },
+  "properties": {
+    "person": {
+      "widget": "hidden",
+      "_visibleIf": [],
+      "properties": {
+        "name": {
+          "widget": "hidden"
+        },
+        "forename": {
+          "widget": "hidden"
+        }
+      }
+    },
+    "forename": {
+      "type": "string",
+      "title": "Forename",
+      "description": "Put your forename here",
+      "minLength": 1,
+      "maxLength": 100,
+      "placeholder": "e.g. John",
+      "widget": {
+        "id": "string",
+        "size": 35,
+        "prefix": [
+          {
+            "icon": "person",
+            "text": ""
+          }
+        ],
+        "validationMessages": {
+          "NO_SEARCH_YET": "Text search is still development in progress..."
+        }
+      },
+      "buttons": [
+        {
+          "id": "reset",
+          "label": "Reset"
+        }
+      ]
+    },
+    "name": {
+      "type": "string",
+      "title": "Name",
+      "description": "Put your familiy name here",
+      "minLength": 1,
+      "maxLength": 100,
+      "placeholder": "e.g. Doe",
+      "widget": {
+        "id": "string",
+        "size": 35,
+        "prefix": [
+          {
+            "icon": "person",
+            "text": ""
+          }
+        ],
+        "validationMessages": {
+          "NO_SEARCH_YET": "Text search is still development in progress..."
+        }
+      },
+      "buttons": [
+        {
+          "id": "reset",
+          "label": "Reset"
+        }
+      ]
+    },
+    "hobbies": {
+      "type": "array",
+      "title": "Hobbies",
+      "description": "Hobbies",
+      "index": "i",
+      "items": {
+        "type": "string",
+        "description": "Hobby $i",
+        "widget": "string"
+      }
+    },
+    "categories": {
+      "type": "array",
+      "title": "Categories",
+      "description": "Categories",
+      "index": "i",
+      "items": {
+        "type": "object",
+        "description": "Category",
+        "properties": {
+          "location": {
+            "widget": "string",
+            "type": "string",
+            "description": "Location"
+          },
+          "design": {
+            "widget": "string",
+            "type": "string",
+            "description": "Design"
+          }
+        }
+      }
+    }
+  },
+  "buttons": [
+    {
+      "label": "Load",
+      "description": "Continue a previously saved application.",
+      "iconPos": "left",
+      "severity": "success",
+      "icon": "file-download",
+      "id": "___default_action_upload_model",
+      "parameters": {
+        "upload": {
+          "property": "",
+          "success": "Successfully uploaded.",
+          "error": "Can't upload file. May be incompatible."
+        }
+      }
+    },
+    {
+      "label": "Save",
+      "description": "Save your work to continue at a later time.",
+      "iconPos": "left",
+      "severity": "info",
+      "icon": "save",
+      "id": "___default_action_download_model",
+      "parameters": {
+        "download": {
+          "property": "",
+          "name": "Form-Download.json",
+          "prompt": "Save as ..."
+        }
+      }
+    }
+  ]
+}

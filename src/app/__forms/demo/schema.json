@@ -1,0 +1,57 @@
+{
+  "type": "object",
+  "properties": {
+    "person": {
+      "type": "object",
+      "properties": {
+        "forename": {
+          "type": "string",
+          "title": "Forename",
+          "description": "Put your forename here",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "Put your family name here",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "hobbies": {
+          "type": "array",
+          "title": "Hobbies",
+          "description": "Hobbies",
+          "index": "i",
+          "items": {
+            "type": "string",
+            "description": "Hobby $i",
+            "title": "Hobby $1"
+          }
+        },
+        "categories": {
+          "type": "array",
+          "title": "Categories",
+          "description": "Categories",
+          "index": "i",
+          "items": {
+            "type": "object",
+            "description": "Category",
+            "properties": {
+              "location": {
+                "type": "string",
+                "description": "Location",
+                "title": "Location"
+              },
+              "design": {
+                "type": "string",
+                "description": "Design",
+                "title": "Design"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
