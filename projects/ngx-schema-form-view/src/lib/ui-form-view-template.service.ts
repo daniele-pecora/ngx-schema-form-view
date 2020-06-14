@@ -89,7 +89,7 @@ export class UIFormViewTemplateService {
               .toPromise()
               .catch((err) => of(failOver(err)))
           ]
-        ).subscribe((results) => {
+        ).subscribe((results:any) => {
           /**
            * TODO Wait for Fix: RxJs Immutable Observable
            * since RxJs returns an immutable value as Observables in subscribe,
