@@ -136,7 +136,8 @@
           },
           "configurations": {
             "production": {
-              "project": "projects/ngx-schema-form-view/ng-package.prod.json"
+              "project": "projects/ngx-schema-form-view/ng-package.prod.json",
+              "tsConfig": "projects/ngx-schema-form-view/tsconfig.lib.prod.json"
             }
           }
         },
