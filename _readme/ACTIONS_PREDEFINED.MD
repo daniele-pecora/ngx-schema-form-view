@@ -28,7 +28,7 @@ The action id is `___default_action_download_model`
 
 ### Options
 
-The option are described by the type [`PredefinedActionDownloadOptions`](./../projects/ui-ngx-form-view-nsf/src/lib/ui-form-view/actions/download-model.ts)
+The option are described by the type [`PredefinedActionDownloadOptions`](./../projects/ngx-schema-form-view/src/lib/ui-form-view/actions/download-model.ts)
 
 ### Full example
 
@@ -58,7 +58,7 @@ The action id is `___default_action_upload_model`
 
 ### Options
 
-The option are described by the type [`PredefinedActionUploadOptions`](./../projects/ui-ngx-form-view-nsf/src/lib/ui-form-view/actions/upload-model.ts)
+The option are described by the type [`PredefinedActionUploadOptions`](./../projects/ngx-schema-form-view/src/lib/ui-form-view/actions/upload-model.ts)
 
 ### Example
 

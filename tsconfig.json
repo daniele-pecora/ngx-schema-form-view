@@ -19,10 +19,10 @@
     ],
     "paths": {
       "ngx-schema-form-view": [
-        "dist/ui-ngx-form-view-nsf"
+        "dist/ngx-schema-form-view"
       ],
       "ngx-schema-form-view/*": [
-        "dist/ui-ngx-form-view-nsf/*"
+        "dist/ngx-schema-form-view/*"
       ]
     }
   }

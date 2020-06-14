@@ -1,13 +1,13 @@
 {
   "name": "ngx-schema-form-view",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "peerDependencies": {
-    "@angular/common": "8.0",
-    "@angular/core": "8.0"
+    "@angular/common": "^9.1.11",
+    "@angular/core": "^9.1.11"
   },
   "dependencies": {
     "json-schema-filter": "^0.1.5",
-    "ngx-schema-form": "^2.4.0",
+    "ngx-schema-form": "^2.5.0",
     "object-mapper": "^5.0.0"
   }
 }

@@ -239,3 +239,8 @@ Try it out in the demo app
 ```bash
 $ npm start
 ```
+
+## Versions
+
+- 1.x Version are for Angular 9
+- 0.0.x Version are for Angular 8 and before
