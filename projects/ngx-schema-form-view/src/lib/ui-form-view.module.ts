@@ -18,7 +18,7 @@ import {PredefinedActionRegistry} from './schema-form-view/predefined-action-reg
   providers: [PredefinedActionRegistry]
 })
 export class UIFormViewModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<UIFormViewModule> {
     return {
       ngModule: UIFormViewModule,
       // TODO expose this service to load all form template assets, then the module must be called with .forRoot()
