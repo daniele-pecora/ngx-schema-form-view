@@ -1,5 +1,5 @@
 import {Actions} from '../../../../dist/ngx-schema-form-view';
-import {FormProperty} from 'ngx-schema-form/lib/model/formproperty';
+import {FormProperty} from 'ngx-schema-form';
 
 export const actions: Actions = {
   'reset': (property: FormProperty): void => {

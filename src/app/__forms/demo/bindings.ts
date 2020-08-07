@@ -1,4 +1,4 @@
-import {FormProperty} from 'ngx-schema-form/lib/model/formproperty';
+import {FormProperty} from 'ngx-schema-form';
 import {Bindings} from '../../../../dist/ngx-schema-form-view';
 
 export const bindings: Bindings = {
