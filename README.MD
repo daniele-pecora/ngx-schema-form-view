@@ -30,14 +30,14 @@ Using this form requires to provide an object of type `UIFormViewComponent` cont
 
     This file will contain any default data that may be set prior prompting the user for data.  
     Must be pure json and not containing any functions.  
-    See https://github.com/guillotinaweb/ngx-schema-form#actions-and-buttons for more information.  
+    See https://json-schema.org/understanding-json-schema/ for more information.  
 
 4. actionsObject
 
     This file will contain actions that may be mapped via buttons definitions in the _formModelObject_.  
     Must contain _key_ and _values_ where the key must match to a button id and  
     the value must be a function that gets the corresponding `formProperty` as argument.  
-    See https://github.com/makinacorpus/ngx-schema-form for more information.  
+    See https://github.com/guillotinaweb/ngx-schema-form#actions-and-buttons for more information.  
 
     There are some [default submit actions](./_readme/ACTIONS_DEFAULT.MD) to use with a `form` or `wizard` widget  
     when handling the moment when the data is sent to the service. (see [here](./_readme/ACTIONS_DEFAULT.MD))  
