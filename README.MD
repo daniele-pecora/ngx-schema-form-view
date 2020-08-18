@@ -7,6 +7,7 @@ Using this form requires to provide an object of type `UIFormViewComponent` cont
 - _modelObject_
 - _validatorsObject_
 - _actionsObject_
+- _bindingsObject_
 - _mapperObject_
 
 
@@ -14,49 +15,61 @@ Using this form requires to provide an object of type `UIFormViewComponent` cont
 
 1. schemaObject
 
-    The JSON schema describing the model for the input data.
-    Must be pure json and not containing any functions
-
+    The JSON schema describing the model for the input data.  
+    Must be pure json and not containing any functions.  
+    This may be the representation of the data how the data structure is specified by a backend.  
+    See https://json-schema.org/understanding-json-schema/ for more information.  
+    
 2. formModelObject
 
-    The extension of the JSON schema that allows to design the final view of the form.
-    Must be pure json and not containing any functions
-    See https://github.com/makinacorpus/ngx-schema-form for more information.
+    The extension of the JSON schema that allows to design the final view of the form.  
+    Must be pure json and not containing any functions.  
+    See https://github.com/makinacorpus/ngx-schema-form for more information.  
 
 3. modelObject
 
-    This file will contain any default data that may be set prior prompting the user for data.
-    Must be pure json and not containing any functions
-    See https://github.com/makinacorpus/ngx-schema-form for more information.
+    This file will contain any default data that may be set prior prompting the user for data.  
+    Must be pure json and not containing any functions.  
+    See https://github.com/guillotinaweb/ngx-schema-form#actions-and-buttons for more information.  
 
 4. actionsObject
 
-    This file will contain actions that may be mapped via buttons definitions in the _formModelObject_.
-    Must contain _key_ and _values_ where the key must match to a button id and
-    the value must be a function that gets the corresponding `formProperty` as argument.
-    See https://github.com/makinacorpus/ngx-schema-form for more information.
+    This file will contain actions that may be mapped via buttons definitions in the _formModelObject_.  
+    Must contain _key_ and _values_ where the key must match to a button id and  
+    the value must be a function that gets the corresponding `formProperty` as argument.  
+    See https://github.com/makinacorpus/ngx-schema-form for more information.  
 
-    There are some [default submit actions](./_readme/ACTIONS_DEFAULT.MD) to use with a `form` or `wizard` widget
-    when handling the moment when the data is sent to the service. (see [here](./_readme/ACTIONS_DEFAULT.MD))
+    There are some [default submit actions](./_readme/ACTIONS_DEFAULT.MD) to use with a `form` or `wizard` widget  
+    when handling the moment when the data is sent to the service. (see [here](./_readme/ACTIONS_DEFAULT.MD))  
 
-    More then that there are also some [predefined actions](./_readme/ACTIONS_PREDEFINED.MD) that may be useful. (see [here](./_readme/ACTIONS_PREDEFINED.MD))
+    More then that there are also some [predefined actions](./_readme/ACTIONS_PREDEFINED.MD) that may be useful. (see [here](./_readme/ACTIONS_PREDEFINED.MD))  
 
 
 5. validatorsObject
 
-    This file allows to define validation rules that overflow the abilities of JSON schema.
-    Must contain _key_ and _values_ where the key must match to a property name from the _schema_ and
-    the value must be a function that gets the corresponding `formProperty` as argument.
-    See https://github.com/makinacorpus/ngx-schema-form for more information.
+    This file allows to define validation rules that overflow the abilities of JSON schema.  
+    Must contain _key_ and _values_ where the key must match to a property name from the _schema_ and  
+    the value must be a function that gets the corresponding `formProperty` as argument.  
+    See https://github.com/guillotinaweb/ngx-schema-form#advanced-validation for more information.  
 
-6. mapperObject
-    This file will contain all necessary mappings to be done on the result model.
-    Must contain _key_ and _values_ where the key must match to a property name of the current model object
-    and value will contain properties matching the target model object.
-    See https://www.npmjs.com/package/object-mapper for more information.
+6. bindingsObject
 
-7. noInputMessage
-    This message text will be shown instead if for any reason the form could not be generated
+    This file will contain all necessary event bindings.  
+    Must contain _key_ and _values_ where the key must match to a property path of the current model object  
+    and value will contain an array of event listeners.  
+    See https://github.com/guillotinaweb/ngx-schema-form#custom-bindings for more information.  
+    
+7. mapperObject
+
+    This file will contain all necessary mappings to be done on the result model.  
+    Must contain _key_ and _values_ where the key must match to a property name of the current model object  
+    and value will contain properties matching the target model object.  
+    This is used to convert the model json to a structure that the backend-server will accept.  
+    See https://www.npmjs.com/package/object-mapper for more information.  
+
+8. noInputMessage
+
+    This message text will be shown instead if for any reason the form could not be generated  
 
 Head over to the [ngx project git repository](https://github.com/guillotinaweb/ngx-schema-form) for more documentation
 
