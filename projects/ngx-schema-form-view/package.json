@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "json-schema-filter": "^0.1.5",
-    "ngx-schema-form": "^2.5.6",
+    "ngx-schema-form": "~2.5.15",
     "object-mapper": "^5.0.0"
   }
 }

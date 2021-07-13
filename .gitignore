@@ -41,7 +41,5 @@ Thumbs.db
 
 .npmrc
 
-package-lock.json
-
 # Ignore own package
 *.tgz
