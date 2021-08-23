@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core'
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from '@angular/core'
 import mergeDeep from '../ui-form-view.utils'
-import {UIFormViewModel} from './ui-form-view-model'
-import {UIFormViewResult} from './ui-form-view-result'
-import {PredefinedActionRegistry} from './predefined-action-registry'
+import { UIFormViewModel } from './ui-form-view-model'
+import { UIFormViewResult } from './ui-form-view-result'
+import { PredefinedActionRegistry } from './predefined-action-registry'
 
 const isEqual_Model_Schema_Form = (ui1: UIFormViewModel, ui2: UIFormViewModel) => {
   if (
@@ -171,7 +171,7 @@ export class UIFormViewComponent implements OnInit, OnChanges {
           this.formValidators = {}
           this.formBindings = {}
 
-          this.schemaObject = {properties: {}}
+          this.schemaObject = { properties: {} }
           this.formModelObject = {}
           this.modelObject = {}
           this.syncUpdatedModel()
@@ -251,7 +251,7 @@ export class UIFormViewComponent implements OnInit, OnChanges {
   private updateSchemaForm() {
     try {
 
-      const newSchema: object = this.schemaObject || {properties: {}}
+      const newSchema: object = this.schemaObject || { properties: {} }
       const newSchemaForm: object = this.formModelObject || {}
 
       const merged = mergeDeep(newSchema, newSchemaForm)
@@ -295,7 +295,7 @@ export class UIFormViewComponent implements OnInit, OnChanges {
 
   private resetForm(data) {
     this.schemaObject = null
-    this.schemaObject = data || {'properties': {}}
+    this.schemaObject = data || { 'properties': {} }
 
     this.formModelObject = {}
 
@@ -357,7 +357,7 @@ export class UIFormViewComponent implements OnInit, OnChanges {
       let beforeResult
       if (!this.formActions['___before_action___schema_form_final']
         || false !== (beforeResult = this.formActions['___before_action___schema_form_final'](property, params))) {
-        const result = {formProperty: property, buttonParams: params, data: beforeResult}
+        const result: UIFormViewResult = new UIFormViewResult(property, params, beforeResult)
         this.onModelChangeFinal.emit(result)
       }
     }
