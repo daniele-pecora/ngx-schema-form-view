@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core'
-import {Actions, Bindings, Mappings, Validators} from './schema-form-view/ui-form-view-model'
-import {UIFormViewHelper} from './schema-form-view/ui-form-view-helper'
-import {UIFormViewModel} from './schema-form-view/ui-form-view-model'
-import {HttpClient} from '@angular/common/http'
-import {Observable} from 'rxjs'
-import {forkJoin, of, from as fromPromise, from} from 'rxjs'
-import {catchError, map} from 'rxjs/operators'
+import { Injectable } from '@angular/core'
+import { Actions, Bindings, Mappings, Validators } from './schema-form-view/ui-form-view-model'
+import { UIFormViewHelper } from './schema-form-view/ui-form-view-helper'
+import { UIFormViewModel } from './schema-form-view/ui-form-view-model'
+import { HttpClient } from '@angular/common/http'
+import { Observable } from 'rxjs'
+import { forkJoin, of, from as fromPromise, from } from 'rxjs'
+import { catchError, map } from 'rxjs/operators'
 
 declare var System: any
 
@@ -23,9 +23,16 @@ export class UIFormViewTemplateService {
     }
     return __path
   }
-
-  public getFinalModel(modelObject: object, schemaObject: object, mapperObject: object): object {
-    return new UIFormViewHelper().getFinalModel(modelObject, mapperObject, schemaObject)
+  /**
+   * @see {@link UIFormViewHelper#getFinalModel(object,object,object,boolean)}
+   * @param modelObject 
+   * @param schemaObject 
+   * @param mapperObject 
+   * @param trimValues 
+   * @returns 
+   */
+  public getFinalModel(modelObject: object, schemaObject: object, mapperObject: object, trimValues?: boolean): object {
+    return new UIFormViewHelper().getFinalModel(modelObject, mapperObject, schemaObject, trimValues)
   }
 
   /**
@@ -37,12 +44,12 @@ export class UIFormViewTemplateService {
    * @returns
    */
   public loadFormTemplate(assetsPath: string, templateId: string,
-                          envValueResolver?: (string) => string): Observable<UIFormViewModel> {
+    envValueResolver?: (string) => string): Observable<UIFormViewModel> {
     return this.loadAllFromTemplateUrl(assetsPath, templateId, envValueResolver)
   }
 
   private loadAllFromTemplateUrl(assetsPath: string, templateId: string,
-                                 envValueResolver?: (string) => string): Observable<UIFormViewModel> {
+    envValueResolver?: (string) => string): Observable<UIFormViewModel> {
     const assetsPathSegment = this.createPath(assetsPath)
     const path = this.createPath(`${assetsPathSegment}${templateId}`)
     return this.loadSchemaSchemaformActionsValidatorMappingsBindings(path, envValueResolver)
@@ -59,100 +66,100 @@ export class UIFormViewTemplateService {
 
     // TODO debug-log which file has been loaded or not
     return Observable.create(observer => {
-        const failOver = (error) => {
-          if (this.verbose) {
-            console.error('[ ### Not running in production mode log warning ### ]', error)
-          }
-          return of(null)// of({error: error})
+      const failOver = (error) => {
+        if (this.verbose) {
+          console.error('[ ### Not running in production mode log warning ### ]', error)
         }
-        forkJoin(
-          [
-            fromPromise(System.import(`${path}schema.json`))
-              .toPromise()
-              .catch((err) => of(failOver(err))),
-            fromPromise(System.import(`${path}schemaform.json`))
-              .toPromise()
-              .catch((err) => of(failOver(err))),
-            fromPromise(System.import(`${path}model.json`))
-              .toPromise()
-              .catch((err) => of(failOver(err))),
-            fromPromise(System.import(`${path}action.ts`))
-              .toPromise()
-              .catch((err) => of(failOver(err))),
-            fromPromise(System.import(`${path}validation.ts`))
-              .toPromise()
-              .catch((err) => of(failOver(err))),
-            fromPromise(System.import(`${path}mapper.ts`))
-              .toPromise()
-              .catch((err) => of(failOver(err))),
-            fromPromise(System.import(`${path}bindings.ts`))
-              .toPromise()
-              .catch((err) => of(failOver(err)))
-          ]
-        ).subscribe((results:any) => {
-          /**
-           * TODO Wait for Fix: RxJs Immutable Observable
-           * since RxJs returns an immutable value as Observables in subscribe,
-           * the result object must be cloned to be mutable again
-           * (see: https://github.com/500tech/angular-tree-component/issues/220)
-           */
-          const schemaFile = this.___fix___make_sure_json_does_not_get_loaded_as_module(results[0])
-          const schemaformFile = this.___fix___make_sure_json_does_not_get_loaded_as_module(results[1])
-          const modelFile = this.___fix___make_sure_json_does_not_get_loaded_as_module(results[2])
-          const actionFile = this.___fix___make_sure_object_does_not_get_loaded_as_module(results[3])
-          const validationFile = this.___fix___make_sure_object_does_not_get_loaded_as_module(results[4])
-          const mapperFile = this.___fix___make_sure_object_does_not_get_loaded_as_module(results[5])
-          const bindingFile = this.___fix___make_sure_object_does_not_get_loaded_as_module(results[6])
-          formSchema = schemaFile || {}
-          formSchemaform = schemaformFile || {}
-          formModel = modelFile || {}
-          formActions = {}
-          if (actionFile) {
-            formActions = actionFile['actions'] as Actions
-          }
-          formValidators = {}
-          if (validationFile) {
-            formValidators = validationFile['validations'] as Validators
-          }
-          formMapper = {}
-          if (mapperFile) {
-            formMapper = mapperFile['mapper'] as Mappings
-          }
-          formBindings = {}
-          if (bindingFile) {
-            formBindings = bindingFile['bindings']  as Bindings
-          }
-
-          if (envValueResolver) {
-            formSchema = JSON.parse(envValueResolver(JSON.stringify(formSchema)))
-            formSchemaform = JSON.parse(envValueResolver(JSON.stringify(formSchemaform)))
-            formModel = JSON.parse(envValueResolver(JSON.stringify(formModel)))
-          }
-          /**
-           * TODO It sould also be possible to get the values as a whole content
-           * if no <code>const (actions|validations|mapper|bindings)</const>
-           * has been exported directly as <code>export default ...</code>
-           * E.G:
-           * <pre>
-           *     formBindings = (bindingFile['bindings']||bindingFile)  as Bindings
-           * </pre>
-           */
-          const uiFormViewModel: UIFormViewModel = {
-            schemaObject: formSchema,
-            formModelObject: formSchemaform,
-            modelObject: formModel,
-            validatorsObject: formValidators,
-            actionsObject: formActions,
-            mapperObject: formMapper,
-            bindingsObject: formBindings
-          }
-          observer.next(uiFormViewModel)
-          observer.complete()
-          return uiFormViewModel
-        }, (error) => {
-          console.error(error)
-        })
+        return of(null)// of({error: error})
       }
+      forkJoin(
+        [
+          fromPromise(System.import(`${path}schema.json`))
+            .toPromise()
+            .catch((err) => of(failOver(err))),
+          fromPromise(System.import(`${path}schemaform.json`))
+            .toPromise()
+            .catch((err) => of(failOver(err))),
+          fromPromise(System.import(`${path}model.json`))
+            .toPromise()
+            .catch((err) => of(failOver(err))),
+          fromPromise(System.import(`${path}action.ts`))
+            .toPromise()
+            .catch((err) => of(failOver(err))),
+          fromPromise(System.import(`${path}validation.ts`))
+            .toPromise()
+            .catch((err) => of(failOver(err))),
+          fromPromise(System.import(`${path}mapper.ts`))
+            .toPromise()
+            .catch((err) => of(failOver(err))),
+          fromPromise(System.import(`${path}bindings.ts`))
+            .toPromise()
+            .catch((err) => of(failOver(err)))
+        ]
+      ).subscribe((results: any) => {
+        /**
+         * TODO Wait for Fix: RxJs Immutable Observable
+         * since RxJs returns an immutable value as Observables in subscribe,
+         * the result object must be cloned to be mutable again
+         * (see: https://github.com/500tech/angular-tree-component/issues/220)
+         */
+        const schemaFile = this.___fix___make_sure_json_does_not_get_loaded_as_module(results[0])
+        const schemaformFile = this.___fix___make_sure_json_does_not_get_loaded_as_module(results[1])
+        const modelFile = this.___fix___make_sure_json_does_not_get_loaded_as_module(results[2])
+        const actionFile = this.___fix___make_sure_object_does_not_get_loaded_as_module(results[3])
+        const validationFile = this.___fix___make_sure_object_does_not_get_loaded_as_module(results[4])
+        const mapperFile = this.___fix___make_sure_object_does_not_get_loaded_as_module(results[5])
+        const bindingFile = this.___fix___make_sure_object_does_not_get_loaded_as_module(results[6])
+        formSchema = schemaFile || {}
+        formSchemaform = schemaformFile || {}
+        formModel = modelFile || {}
+        formActions = {}
+        if (actionFile) {
+          formActions = actionFile['actions'] as Actions
+        }
+        formValidators = {}
+        if (validationFile) {
+          formValidators = validationFile['validations'] as Validators
+        }
+        formMapper = {}
+        if (mapperFile) {
+          formMapper = mapperFile['mapper'] as Mappings
+        }
+        formBindings = {}
+        if (bindingFile) {
+          formBindings = bindingFile['bindings'] as Bindings
+        }
+
+        if (envValueResolver) {
+          formSchema = JSON.parse(envValueResolver(JSON.stringify(formSchema)))
+          formSchemaform = JSON.parse(envValueResolver(JSON.stringify(formSchemaform)))
+          formModel = JSON.parse(envValueResolver(JSON.stringify(formModel)))
+        }
+        /**
+         * TODO It sould also be possible to get the values as a whole content
+         * if no <code>const (actions|validations|mapper|bindings)</const>
+         * has been exported directly as <code>export default ...</code>
+         * E.G:
+         * <pre>
+         *     formBindings = (bindingFile['bindings']||bindingFile)  as Bindings
+         * </pre>
+         */
+        const uiFormViewModel: UIFormViewModel = {
+          schemaObject: formSchema,
+          formModelObject: formSchemaform,
+          modelObject: formModel,
+          validatorsObject: formValidators,
+          actionsObject: formActions,
+          mapperObject: formMapper,
+          bindingsObject: formBindings
+        }
+        observer.next(uiFormViewModel)
+        observer.complete()
+        return uiFormViewModel
+      }, (error) => {
+        console.error(error)
+      })
+    }
     )
   }
 
@@ -201,7 +208,7 @@ export class UIFormViewTemplateService {
    * @param options
    * @returns
    */
-  getAll(urls: Array<string>, options ?: any): Observable<any> {
+  getAll(urls: Array<string>, options?: any): Observable<any> {
     const resultsObjects: Array<any> = []
     for (let i = 0; i < urls.length; i++) {
       resultsObjects.push(this.http.get(urls[i]))
