@@ -17,6 +17,9 @@
   (onModelChangeFinal)="onModelComplete($event)"
   (onModelChange)="onModelChange($event)"
   noInputMessage="Form couldn't be generated!"
+  (onBeforeAction)="onBeforeAction($event)"
+  (onAfterAction)="onAfterAction($event)"
+  noSchemaCompile="false"
 ></ui-form-view>
 
 <h4>Actual Model Object</h4>

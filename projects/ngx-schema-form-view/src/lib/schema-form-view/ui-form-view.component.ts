@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from '@angular/core'
 import mergeDeep from '../ui-form-view.utils'
-import { UIFormViewModel } from './ui-form-view-model'
+import { Actions, UIFormViewModel } from './ui-form-view-model'
 import { UIFormViewResult } from './ui-form-view-result'
 import { PredefinedActionRegistry } from './predefined-action-registry'
+import { FormProperty, SchemaValidatorFactory } from 'ngx-schema-form'
 
 const isEqual_Model_Schema_Form = (ui1: UIFormViewModel, ui2: UIFormViewModel) => {
   if (
@@ -35,6 +36,9 @@ export class UIFormViewComponent implements OnInit, OnChanges {
   @Input()
   noCard = false
 
+  @Input()
+  noSchemaCompile = false
+
   @Output()
   onModelChange: EventEmitter<UIFormViewModel> = new EventEmitter<UIFormViewModel>()
 
@@ -57,15 +61,46 @@ export class UIFormViewComponent implements OnInit, OnChanges {
   /**
    * this is the merge of {@code schemaObject} and {@code formModelObject}
    */
-  finalSchemaObject: object
+  //finalSchemaObject: object
 
-  formActions: any
+  __finalSchemaObject: object
+
+  get finalSchemaObject() {
+    return this.__finalSchemaObject
+  }
+  set finalSchemaObject(schema: any) {
+    this.__finalSchemaObject = this.compileSchemaIfNeeded(schema)
+  }
+
+  _formActions: any
+  get formActions() {
+    return this._formActions
+  }
+  set formActions(actions: any) {
+    // this._formActions = this.wrapActions(actions)
+    this._formActions = actions
+  }
   formValidators: any
   formMappings: any
   formBindings: any
 
-  constructor(private predefinedActionRegistry: PredefinedActionRegistry) {
 
+  @Output()
+  onBeforeAction: EventEmitter<OnActionEvent> = new EventEmitter<OnActionEvent>()
+
+  @Output()
+  onAfterAction: EventEmitter<OnActionEvent> = new EventEmitter<OnActionEvent>()
+
+  onChangeFormViewModel: UIFormViewModel
+
+  constructor(private predefinedActionRegistry: PredefinedActionRegistry, private schemaValidatorFactory: SchemaValidatorFactory) {
+
+  }
+
+  compileSchemaIfNeeded(schema: any) {
+    if (`${this.noSchemaCompile}` === 'true')
+      return schema
+    return this.schemaValidatorFactory.compile(schema) || schema
   }
 
   ngOnInit() {
@@ -183,24 +218,26 @@ export class UIFormViewComponent implements OnInit, OnChanges {
 
         this.updateSchemaForm()
 
-        this.onLoaded.emit(
-          new UIFormViewModel(
-            this.schemaObject,
-            this.formModelObject,
-            /**
-             * We must use a second container otherwise array widget will not be able to add new element.<br/>
-             * So <code>this.modelObject</code> won't work.<br/>
-             * Using <code>this.updatedModelObject</code> instead.<br/>
-             */
-            // this.modelObject,
-            this.updatedModelObject,
-            this.formValidators,
-            this.formActions,
-            this.formMappings,
-            this.formBindings)
-        )
+        this.onChangeFormViewModel = new UIFormViewModel(
+          this.schemaObject,
+          this.formModelObject,
+          /**
+           * We must use a second container otherwise array widget will not be able to add new element.<br/>
+           * So <code>this.modelObject</code> won't work.<br/>
+           * Using <code>this.updatedModelObject</code> instead.<br/>
+           */
+          // this.modelObject,
+          this.updatedModelObject,
+          this.formValidators,
+          this.formActions,
+          this.formMappings,
+          this.formBindings)
 
         this.setupLastChangeEmitterIntoFormActions()
+        this.formActions = this.wrapActions(this.formActions)
+        this.onChangeFormViewModel.actionsObject = this.formActions
+
+        this.onLoaded.emit(this.onChangeFormViewModel)
       }
     }
   }
@@ -306,22 +343,21 @@ export class UIFormViewComponent implements OnInit, OnChanges {
   }
 
   private emitEvent() {
-    this.onModelChange.emit(
-      new UIFormViewModel(
-        this.schemaObject,
-        this.formModelObject,
-        /**
-         * We must use a second container otherwise array widget will not be able to add new element.<br/>
-         * So <code>this.modelObject</code> won't work.<br/>
-         * Using <code>this.updatedModelObject</code> instead.<br/>
-         */
-        // this.modelObject,
-        this.updatedModelObject,
-        this.formValidators,
-        this.formActions,
-        this.formMappings,
-        this.formBindings)
-    )
+    this.onChangeFormViewModel = new UIFormViewModel(
+      this.schemaObject,
+      this.formModelObject,
+      /**
+       * We must use a second container otherwise array widget will not be able to add new element.<br/>
+       * So <code>this.modelObject</code> won't work.<br/>
+       * Using <code>this.updatedModelObject</code> instead.<br/>
+       */
+      // this.modelObject,
+      this.updatedModelObject,
+      this.formValidators,
+      this.formActions,
+      this.formMappings,
+      this.formBindings)
+    this.onModelChange.emit(this.onChangeFormViewModel)
   }
 
   private setupLastChangeEmitterIntoFormActions() {
@@ -382,4 +418,30 @@ export class UIFormViewComponent implements OnInit, OnChanges {
       }
     }
   }
+
+  wrapActions(actions: Actions) {
+    if (actions) {
+      for (const key of Object.keys(actions)) {
+        const orgFun = actions[key]
+        actions[key] = (formProperty?: FormProperty, parameters?: any) => {
+          const actionArgs = { formProperty: formProperty, parameters: parameters }
+          if (this.onBeforeAction)
+            this.onBeforeAction.emit({ action: actionArgs, uiFormViewModel: this.onChangeFormViewModel })
+          try { orgFun.apply(this, [formProperty, parameters]) } catch (e) { console.error('Error processing action:', actionArgs, e) }
+          if (this.onAfterAction)
+            this.onAfterAction.emit({ action: actionArgs, uiFormViewModel: this.onChangeFormViewModel })
+          return
+        }
+      }
+    }
+    return actions
+  }
+}
+
+export interface OnActionEvent {
+  action: {
+    formProperty: FormProperty,
+    parameters: any
+  }
+  uiFormViewModel: UIFormViewModel
 }

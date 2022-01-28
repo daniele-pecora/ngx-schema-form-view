@@ -74,6 +74,19 @@ Using this form requires to provide an object of type `UIFormViewComponent` cont
 Head over to the [ngx project git repository](https://github.com/guillotinaweb/ngx-schema-form) for more documentation
 
 
+### API 
+- `[noCard]` `true` or `false` If false the css classes `card card-w-title` are not added to the container `div`
+- `[uiInitialFormViewModel]` The model to build up a form
+- `(onLoaded)` Event emitted when the initial loading has completed
+- `(onModelChangeFinal)` Event emitted when the model has reached is final state and the form data is complete
+- `(onModelChange)` Event emitted when the model changes
+- `noInputMessage` A message text shown if the form couldn't be build up
+- `(onBeforeAction)` Event emitted before an `action` has been processed
+- `(onAfterAction)` Event emitted after an `action` has been processed
+- `noSchemaCompile` `true` or `false`  
+    Decide whatever to compile the schema so `$ref` and `$defs` get resolved
+
+
 ### Example usage
 
 Import module in your `app.module.ts`
@@ -104,7 +117,11 @@ In HTML template
         [uiInitialFormViewModel]="uiInitialFormViewModel"
         (onLoaded)="onFormViewLoaded($event)"
         (onModelChangeFinal)="onModelComplete($event)"
+        (onModelChange)="onModelChange($event)"
         noInputMessage="Form couldn't be generated!"
+        (onBeforeAction)="onBeforeAction($event)"
+        (onAfterAction)="onAfterAction($event)"
+        noSchemaCompile="false"
       ></ui-form-view>
 ```
 
@@ -234,7 +251,13 @@ In your component.ts
             return new UIFormViewHelper().createFinalModelObject(uiInitialFormViewModel)
         }
 
+        onBeforeAction(event: OnActionEvent) {
+          console.log('  onBeforeAction(event: OnActionEvent)', event)
+        }
 
+        onAfterAction(event: OnActionEvent) {
+          console.log('  onAfterAction(event: OnActionEvent)', event)
+        }
     }
 ```
 
