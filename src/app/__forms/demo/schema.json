@@ -1,6 +1,9 @@
 {
   "type": "object",
   "properties": {
+    "info": {
+      "$ref": "#/$defs/info"
+    },
     "person": {
       "type": "object",
       "properties": {
@@ -50,6 +53,30 @@
               }
             }
           }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "location": {
+      "type": "string",
+      "title": "Location"
+    },
+    "info": {
+      "title": "Info",
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string",
+          "title": "Location"
+        },
+        "popularity": {
+          "type": "number",
+          "title": "popularity"
+        },
+        "open": {
+          "type": "boolean",
+          "title": "Is open"
         }
       }
     }

@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SchemaFormModule} from 'ngx-schema-form';
+import {SchemaFormModule, SchemaValidatorFactory, ZSchemaValidatorFactory} from 'ngx-schema-form';
 import {UIFormViewModule} from '../../dist/ngx-schema-form-view';
 
 @NgModule({
@@ -18,7 +18,9 @@ import {UIFormViewModule} from '../../dist/ngx-schema-form-view';
     , SchemaFormModule.forRoot()
     , UIFormViewModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    { provide: SchemaValidatorFactory, useClass: ZSchemaValidatorFactory }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

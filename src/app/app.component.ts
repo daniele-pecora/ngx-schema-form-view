@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 // import {UIFormViewHelper} from 'ngx-schema-form-view'
 // import {UIFormViewTemplateService} from 'ngx-schema-form-view'
 // import {UIFormViewModel} from 'ngx-schema-form-view'
 // import {UIFormViewResult} from 'ngx-schema-form-view'
-import {HttpClient} from '@angular/common/http'
+import { HttpClient } from '@angular/common/http'
 
 // see 'typings.d.ts' how this works with json files
 import form_model from './__forms/demo/model.json'
@@ -14,7 +14,7 @@ import form_actions from './__forms/demo/action'
 import form_validations from './__forms/demo/validation'
 import form_bindings from './__forms/demo/bindings'
 // import {Actions, Bindings, Mappings, Validators} from 'ngx-schema-form-view'
-import {forkJoin, from as fromPromise, of} from 'rxjs'
+import { forkJoin, from as fromPromise, of } from 'rxjs'
 
 import {
   Actions, Bindings, Mappings, Validators
@@ -23,8 +23,17 @@ import {
   , UIFormViewModel
   , UIFormViewResult
 } from '../../dist/ngx-schema-form-view'
+import { FormProperty, LogService } from 'ngx-schema-form'
 
 declare var System: any
+
+export interface OnActionEvent {
+  action: {
+    formProperty: FormProperty,
+    parameters: any
+  }
+  uiFormViewModel: UIFormViewModel
+}
 
 @Component({
   selector: 'app-root',
@@ -49,10 +58,41 @@ export class AppComponent implements OnInit {
   finalModelObject: object
   actualModelObject: object
 
-  constructor(private templateLoaderService: UIFormViewTemplateService) {
-
+  get onChangeFormViewModel() {
+    return this.actualModelObject as UIFormViewModel
   }
 
+  constructor(private templateLoaderService: UIFormViewTemplateService,
+    private logger: LogService,) {
+
+  }
+  /*
+    // POC how to have global action event listener
+    onBeforeAction(event: OnActionEvent) {
+      console.log('onBeforeAction', event)
+    }
+    // POC how to have global action event listener
+    onAfterAction(event: OnActionEvent) {
+      console.log('onAfterAction', event)
+    }
+  
+    // POC how to have global action event listener
+    wrapActions(actions: Actions) {
+      for (const key of Object.keys(actions)) {
+        const orgFun = actions[key]
+        actions[key] = (formProperty?: FormProperty, parameters?: any) => {
+          const actionArgs = { formProperty: formProperty, parameters: parameters }
+          // <before>
+          this.onBeforeAction({ action: actionArgs, uiFormViewModel: this.onChangeFormViewModel })
+          try { orgFun.apply(this, [formProperty, parameters]) } catch (e) { this.logger.error('Error processing action:', actionArgs, e) }
+          // <after>
+          this.onAfterAction({ action: actionArgs, uiFormViewModel: this.onChangeFormViewModel })
+          return
+        }
+      }
+      return actions
+    }
+  */
   // loading all assets from files in folder 'src/assets/demo'
   loadTemplateFromFiles() {
 
@@ -76,7 +116,7 @@ export class AppComponent implements OnInit {
         this.schemaObject = result.schemaObject
         this.schemaFormObject = result.formModelObject
         this.validatorsObject = result.validatorsObject
-        this.actionsObject = result.actionsObject
+        this.actionsObject = /*POC how to have global action event listener *//*this.wrapActions(result.actionsObject)*/result.actionsObject
         this.mapperObject = result.mapperObject
         this.bindingsObject = result.bindingsObject
       })
@@ -97,7 +137,7 @@ export class AppComponent implements OnInit {
       formModelObject: this.schemaFormObject,
       modelObject: this.modelObject,
       validatorsObject: this.validatorsObject,
-      actionsObject: this.actionsObject,
+      actionsObject: /*POC how to have global action event listener *//*this.wrapActions(this.actionsObject)*/this.actionsObject,
       mapperObject: this.mapperObject,
       bindingsObject: this.bindingsObject
     }
@@ -133,5 +173,14 @@ export class AppComponent implements OnInit {
     this.uiInitialFormViewModel = uiInitialFormViewModel
 
     // this.loadTemplateFromFiles()
+  }
+
+
+  onBeforeAction(event: OnActionEvent) {
+    console.log('  onBeforeAction(event: OnActionEvent)', event)
+  }
+
+  onAfterAction(event: OnActionEvent) {
+    console.log('  onAfterAction(event: OnActionEvent)', event)
   }
 }
