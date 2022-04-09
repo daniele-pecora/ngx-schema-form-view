@@ -37,7 +37,7 @@
     "jexl": "^2.1.1",
     "json-schema-filter": "^0.1.5",
     "methods": "^1.1.2",
-    "moment": "2.26.0",
+    "moment": "2.29.2",
     "nanoscroller": "^0.8.7",
     "ng-packagr": "^10.1.1",
     "ngx-openlayers": "^1.0.0-next.15",
